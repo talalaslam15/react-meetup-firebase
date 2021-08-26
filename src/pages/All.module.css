@@ -1,0 +1,24 @@
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.5em;
+}
+.search input {
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 0.5em;
+}
+.search {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: 1px solid black;
+}
+.search:hover {
+  box-shadow: 0 0 5px rgba(49, 49, 46, 0.377);
+}
+.icon {
+  margin: 0 0.1em 0 0.3em;
+}
