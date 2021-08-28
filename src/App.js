@@ -2,7 +2,10 @@ import { Route, Switch } from "react-router-dom";
 import AllMeetupsPage from "./pages/AllMeetups";
 import FavoritesPage from "./pages/Favorites";
 import NewMeetupPage from "./pages/NewMeetup";
-import Layout from "./components/layoyts/Layout";
+import SignupPage from "./components/login/SignupPage";
+import SigninPage from "./components/login/SigninPage";
+import { AuthProvider } from "./components/login/AuthContext";
+import PrivateRoute from "./components/login/PrivateRoute";
 // const router = [
 //   { path: "/", component: AllMeetupsPage },
 //   { path: "/favorites", component: FavoritesPage },
@@ -17,22 +20,20 @@ function App() {
        </Route>
      );
    })} */
-    <Layout>
+    <AuthProvider>
       <Switch>
-        <Route path="/" exact>
-          <AllMeetupsPage />
+        <PrivateRoute path="/" exact component={AllMeetupsPage} />
+        <PrivateRoute path="/fav" component={FavoritesPage} />
+        <PrivateRoute path="/new" component={NewMeetupPage} />
+        <PrivateRoute path="/edit/:id" component={NewMeetupPage} />
+        <Route path="/signup">
+          <SignupPage />
         </Route>
-        <Route path="/fav">
-          <FavoritesPage />
-        </Route>
-        <Route path="/new">
-          <NewMeetupPage />
-        </Route>
-        <Route path="/edit/:id">
-          <NewMeetupPage />
+        <Route path="/signin">
+          <SigninPage />
         </Route>
       </Switch>
-    </Layout>
+    </AuthProvider>
   );
 }
 
