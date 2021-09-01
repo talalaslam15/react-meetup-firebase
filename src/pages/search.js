@@ -9,7 +9,7 @@ function Search() {
 
   useEffect(() => {
     if (value) {
-      history.push("/?title=" + value);
+      history.push("/?query=" + value);
     } else {
       history.push("");
     }

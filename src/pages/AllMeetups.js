@@ -1,19 +1,19 @@
 import MeetupList from "../components/meetups/MeetupList";
 import Search from "./search";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import classes from "./All.module.css";
+import { MeetupContext } from "../store/update-context";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 function AllMeetupsPage() {
+  const MeetupCtx = useContext(MeetupContext);
+
   const [isloading, setIsLoading] = useState(true);
   const [loadedMeetups, setLoadedMeetups] = useState([]);
-  const [data, setdata] = useState([]);
-  // let query = useQuery();
-
-  let query = useQuery().get("title");
+  let query = useQuery().get("query");
 
   function loadData() {
     setIsLoading(true);
@@ -22,32 +22,40 @@ function AllMeetupsPage() {
         return response.json();
       })
       .then((data) => {
-        setdata(data);
+        MeetupCtx.updateMeetups(data);
 
         setIsLoading(false);
       });
   }
-
   useEffect(() => {
     loadData();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     const meetups = [];
-    for (const key in data) {
+    for (const key in MeetupCtx.meetups) {
       const meetup = {
         id: key,
-        ...data[key],
+        ...MeetupCtx.meetups[key],
       };
       if (query) {
-        if (data[key].title.toLowerCase().indexOf(query.toLowerCase()) > -1) {
-          meetups.push(meetup);
-        } else if (
-          data[key].description.toLowerCase().indexOf(query.toLowerCase()) > -1
+        if (
+          MeetupCtx.meetups[key].title
+            .toLowerCase()
+            .indexOf(query.toLowerCase()) > -1
         ) {
           meetups.push(meetup);
         } else if (
-          data[key].address.toLowerCase().indexOf(query.toLowerCase()) > -1
+          MeetupCtx.meetups[key].description
+            .toLowerCase()
+            .indexOf(query.toLowerCase()) > -1
+        ) {
+          meetups.push(meetup);
+        } else if (
+          MeetupCtx.meetups[key].address
+            .toLowerCase()
+            .indexOf(query.toLowerCase()) > -1
         ) {
           meetups.push(meetup);
         }
@@ -56,7 +64,7 @@ function AllMeetupsPage() {
       }
     }
     setLoadedMeetups(meetups);
-  }, [query, data]);
+  }, [query, MeetupCtx.meetups]);
 
   return (
     <section>
@@ -65,16 +73,9 @@ function AllMeetupsPage() {
         <Search />
       </div>
       {isloading ? (
-        <section>
-          <p>Loading...</p>
-        </section>
+        <p>Loading...</p>
       ) : (
-        <MeetupList
-          meetups={loadedMeetups}
-          onDeleteComplete={() => {
-            loadData();
-          }}
-        />
+        <MeetupList meetups={loadedMeetups} onDeleteComplete={loadData} />
       )}
     </section>
   );

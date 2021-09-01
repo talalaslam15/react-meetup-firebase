@@ -1,131 +1,142 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import "./signup.css";
 import { useAuth } from "./AuthContext";
 import { Link, useHistory } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Box from "@material-ui/core/Box";
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: "15px",
+    textAlign: "center",
+  },
+  myButton: {
+    marginTop: "10px",
+  },
+}));
 export default function SignupPage() {
-  const usernameRef = useRef();
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const password2Ref = useRef();
+  const classes = useStyles();
   const history = useHistory();
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [password2Error, setPassword2Error] = useState("");
   const [loading, setLoading] = useState(false);
 
   const { signup } = useAuth();
 
-  function validateForm() {
-    let e = true;
-    setNameError("");
-    setEmailError("");
-    setPasswordError("");
-    setPassword2Error("");
-    if (!usernameRef.current.value) {
-      setNameError("UserName Required");
-      e = false;
-    }
-    if (!emailRef.current.value) {
-      setEmailError("Email Required");
-      e = false;
-    } else if (!emailRef.current.value.includes("@")) {
-      setEmailError("Please Provide a valid Email");
-      e = false;
-    }
-    if (!password2Ref.current.value) {
-      setPassword2Error("Password Required");
-      e = false;
-    }
-    if (!passwordRef.current.value) {
-      setPasswordError("Password Required");
-      e = false;
-    } else if (passwordRef.current.value.length < 6) {
-      setPasswordError("Password should contain atleast 6 letters!");
-      e = false;
-    } else if (passwordRef.current.value !== password2Ref.current.value) {
-      setPasswordError("Passwords do not match!");
-      setPassword2Error("Passwords do not match!");
-      e = false;
-    }
-    return e;
-  }
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      email: "",
+      password: "",
+      password2: "",
+    },
+    validationSchema: Yup.object({
+      username: Yup.string()
+        .max(15, "Must be 15 characters or less")
+        .required("Required"),
+      email: Yup.string().email("Invalid email address").required("Required"),
+      password: Yup.string()
+        .min(6, "Passwod must be 6 characters or more")
+        .required("Required"),
+      password2: Yup.string().oneOf(
+        [Yup.ref("password"), null],
+        "Passwords do not match"
+      ),
+    }),
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!validateForm()) return;
-    try {
-      setLoading(true);
-      await signup(emailRef.current.value, passwordRef.current.value);
-      alert("Account created, Press Ok to Redirect to Home Page!");
-      history.push("/");
-    } catch {
-      alert("Failed to create an Account");
-    }
-    setLoading(false);
-  }
+    onSubmit: async (values) => {
+      try {
+        setLoading(true);
+        await signup(values.email, values.password);
+        alert("Account created, Press Ok to Redirect to Home Page!");
+        history.push("/");
+      } catch {
+        alert("Failed to create an Account");
+      }
+      setLoading(false);
+    },
+  });
 
   return (
     <div className="bg">
       <div className="signup-container">
         <div className="form-content">
-          <form className="form" onSubmit={handleSubmit} noValidate>
-            <h1 style={{ textAlign: "center" }}>Sign Up</h1>
-            <div className="form-inputs">
-              <label className="form-label">Username</label>
-              <input
-                className="form-input"
+          <form
+            className={classes.root}
+            onSubmit={formik.handleSubmit}
+            noValidate
+            autoComplete="off"
+          >
+            <h1>Sign Up</h1>
+            <Box mb={"16px"}>
+              <TextField
+                fullWidth
+                label="Username"
+                helperText={formik.touched.username && formik.errors.username}
+                error={formik.touched.username && formik.errors.username}
                 type="text"
                 name="username"
-                placeholder="Enter your username"
-                ref={usernameRef}
+                variant="outlined"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.username}
               />
-              {nameError && <small style={{ color: "red" }}>{nameError}</small>}
-            </div>
-            <div className="form-inputs">
-              <label className="form-label">Email</label>
-              <input
-                className="form-input"
-                type="email"
+            </Box>
+            <Box mb={"16px"}>
+              <TextField
+                fullWidth
+                label="Email"
+                helperText={formik.touched.email && formik.errors.email}
+                error={formik.touched.email && formik.errors.email}
+                type="text"
                 name="email"
-                placeholder="Enter your email"
-                ref={emailRef}
+                variant="outlined"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.email}
               />
-              {emailError && (
-                <small style={{ color: "red" }}>{emailError}</small>
-              )}
-            </div>
-            <div className="form-inputs">
-              <label className="form-label">Password</label>
-              <input
-                className="form-input"
+            </Box>
+            <Box mb={"16px"}>
+              <TextField
+                fullWidth
+                label="Password"
+                helperText={formik.touched.password && formik.errors.password}
+                error={formik.touched.password && formik.errors.password}
                 type="password"
                 name="password"
-                placeholder="Enter your password"
-                ref={passwordRef}
+                variant="outlined"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
               />
-              {passwordError && (
-                <small style={{ color: "red" }}>{passwordError}</small>
-              )}
-            </div>
-            <div className="form-inputs">
-              <label className="form-label">Confirm Password</label>
-              <input
-                className="form-input"
+            </Box>
+            <Box mb={"16px"}>
+              <TextField
+                fullWidth
+                label="Confirm Password"
+                helperText={formik.touched.password2 && formik.errors.password2}
+                error={formik.touched.password2 && formik.errors.password2}
                 type="password"
                 name="password2"
-                placeholder="Confirm your password"
-                ref={password2Ref}
+                variant="outlined"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password2}
               />
-              {password2Error && (
-                <small style={{ color: "red" }}>{password2Error}</small>
-              )}
-            </div>
-            <button disabled={loading} className="form-input-btn" type="submit">
+            </Box>
+            <Button
+              disabled={loading}
+              className={classes.myButton}
+              type="submit"
+              color="primary"
+              variant="contained"
+              fullWidth
+            >
               Sign up
-            </button>
-            <span className="form-input-login">
+            </Button>
+            <span className="form-input-page">
               Already have an account? Login <Link to="/signin">here</Link>
             </span>
           </form>
@@ -134,3 +145,31 @@ export default function SignupPage() {
     </div>
   );
 }
+
+// const validate = (values) => {
+//   const errors = {};
+//   if (!values.username) {
+//     errors.username = "UserName is Required";
+//   } else if (values.username.length > 15) {
+//     errors.username = "Must be 15 characters or less";
+//   }
+//   if (!values.email) {
+//     errors.email = "Email is Required";
+//   } else if (
+//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+//   ) {
+//     errors.email = "Invalid email address";
+//   }
+//   if (!values.password) {
+//     errors.password = "Password is Required";
+//   } else if (values.password.length <= 6) {
+//     errors.password = "Password Must be greater than 6 characters";
+//   } else if (values.password !== values.password2) {
+//     errors.password = "Passwords do not Match";
+//     errors.password2 = "Passwords do not Match";
+//   }
+//   if (!values.password2) {
+//     errors.password2 = "Password is Required";
+//   }
+//   return errors;
+// };

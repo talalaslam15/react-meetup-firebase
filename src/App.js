@@ -6,20 +6,9 @@ import SignupPage from "./components/login/SignupPage";
 import SigninPage from "./components/login/SigninPage";
 import { AuthProvider } from "./components/login/AuthContext";
 import PrivateRoute from "./components/login/PrivateRoute";
-// const router = [
-//   { path: "/", component: AllMeetupsPage },
-//   { path: "/favorites", component: FavoritesPage },
-// ];
+
 function App() {
   return (
-    /*    {router.map(function (route) {
-     const Component = route.component;
-     return (
-       <Route path={route.path}>
-         <Component />
-       </Route>
-     );
-   })} */
     <AuthProvider>
       <Switch>
         <PrivateRoute path="/" exact component={AllMeetupsPage} />

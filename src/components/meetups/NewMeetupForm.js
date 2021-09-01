@@ -1,13 +1,17 @@
 import Card from "../ui/Card";
 import { useParams } from "react-router";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import classes from "./NewMeetupForm.module.css";
 import { useHistory } from "react-router-dom";
 import { FiCamera } from "react-icons/fi";
 import { storage } from "../../firebase/firebase";
 import moment from "moment";
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
+import { MeetupContext } from "../../store/update-context";
 
 function NewMeetupForm(props) {
+  const [selectedDate, handleDateChange] = useState(new Date());
   const history = useHistory();
   const { id } = useParams();
   const [url, seturl] = useState(null);
@@ -15,44 +19,36 @@ function NewMeetupForm(props) {
   const titleInputRef = useRef();
   const imageInputRef = useRef();
   const addressInputRef = useRef();
-  const dateInputRef = useRef();
   const descriptionInputRef = useRef();
 
+  const MeetupCtx = useContext(MeetupContext);
   useEffect(() => {
     if (id) {
       let x;
       let currentMeetup;
-      fetch("https://react-app-2ce1f-default-rtdb.firebaseio.com/meetups.json")
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          for (x in data) {
-            if (x === id) {
-              currentMeetup = data[x];
-              break;
-            }
-          }
-          titleInputRef.current.value = currentMeetup.title;
-          imageInputRef.current.value = currentMeetup.image;
-          seturl(currentMeetup.image);
-          addressInputRef.current.value = currentMeetup.address;
-          dateInputRef.current.value = currentMeetup.date;
-          descriptionInputRef.current.value = currentMeetup.description;
-        });
+      for (x in MeetupCtx.meetups) {
+        if (x === id) {
+          currentMeetup = MeetupCtx.meetups[x];
+          break;
+        }
+      }
+      titleInputRef.current.value = currentMeetup.title;
+      imageInputRef.current.value = currentMeetup.image;
+      seturl(currentMeetup.image);
+      addressInputRef.current.value = currentMeetup.address;
+      handleDateChange(currentMeetup.date);
+      descriptionInputRef.current.value = currentMeetup.description;
     }
-  }, [id]);
+  }, [id, MeetupCtx.meetups]);
+
   function submitHandler(event) {
     event.preventDefault();
 
-    let date = moment(dateInputRef.current.value).format(
-      "dddd, MMMM Do YYYY [@] h:mm:ss"
-    );
     const meetupData = {
       title: titleInputRef.current.value,
       image: imageInputRef.current.value,
       address: addressInputRef.current.value,
-      date: date,
+      date: selectedDate,
       description: descriptionInputRef.current.value,
     };
 
@@ -72,24 +68,10 @@ function NewMeetupForm(props) {
         history.replace("/");
       });
     } else {
-      const enteredTitle = titleInputRef.current.value;
-      const enteredImage = imageInputRef.current.value;
-      const enteredAddress = addressInputRef.current.value;
-      const enteredDate = moment(dateInputRef).format(
-        "dddd, MMMM Do YYYY [@] h:mm:ss"
-      );
-      const enteredDescription = descriptionInputRef.current.value;
-
-      const meetupData = {
-        title: enteredTitle,
-        image: enteredImage,
-        address: enteredAddress,
-        date: enteredDate,
-        description: enteredDescription,
-      };
       props.onAddMeetup(meetupData);
     }
   }
+
   function handleChange(e) {
     if (e.target.files[0]) {
       setIsLoading(true);
@@ -116,6 +98,7 @@ function NewMeetupForm(props) {
       );
     }
   }
+
   return (
     <Card>
       <form className={classes.form} onSubmit={submitHandler}>
@@ -168,15 +151,18 @@ function NewMeetupForm(props) {
           <label htmlFor="address">Meetup Address</label>
           <input type="text" id="address" required ref={addressInputRef} />
         </div>
-        <div className={classes.control}>
-          <label for="time">Date and Time : </label>
-          <input
-            type="datetime-local"
+        <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils}>
+          <DateTimePicker
+            fullWidth
+            format="dddd, MMMM Do YYYY [@] h:mm a"
+            label="DateTimePicker"
+            inputVariant="outlined"
+            value={selectedDate}
+            onChange={handleDateChange}
             id="time"
             name="time"
-            ref={dateInputRef}
           />
-        </div>
+        </MuiPickersUtilsProvider>
         <div className={classes.control}>
           <label htmlFor="description">Description</label>
           <textarea

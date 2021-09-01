@@ -6,12 +6,15 @@ import "./index.css";
 import App from "./App";
 
 import { FavoritesContextProvider } from "./store/favorites-context";
+import MeetupContextProvider from "./store/update-context";
 
 ReactDOM.render(
-  <FavoritesContextProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </FavoritesContextProvider>,
+  <MeetupContextProvider>
+    <FavoritesContextProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </FavoritesContextProvider>
+  </MeetupContextProvider>,
   document.getElementById("root")
 );
