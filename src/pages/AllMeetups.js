@@ -4,6 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import classes from "./All.module.css";
 import { MeetupContext } from "../store/update-context";
+import BackToTop from "./BackToTop";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -11,7 +12,7 @@ function useQuery() {
 function AllMeetupsPage() {
   const MeetupCtx = useContext(MeetupContext);
 
-  const [isloading, setIsLoading] = useState(true);
+  const [isloading, setIsLoading] = useState(false);
   const [loadedMeetups, setLoadedMeetups] = useState([]);
   let query = useQuery().get("query");
 
@@ -23,7 +24,6 @@ function AllMeetupsPage() {
       })
       .then((data) => {
         MeetupCtx.updateMeetups(data);
-
         setIsLoading(false);
       });
   }
@@ -72,6 +72,7 @@ function AllMeetupsPage() {
         <h1>{query ? "Filtering: " + query : "All Meetups Page"}</h1>
         <Search />
       </div>
+      <BackToTop />
       {isloading ? (
         <p>Loading...</p>
       ) : (

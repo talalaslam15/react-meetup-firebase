@@ -15,8 +15,8 @@ import moment from "moment";
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 600,
-    margin: "1em",
+    maxWidth: "100%",
+    margin: "1em 0",
     textAlign: "center",
   },
   media: {
@@ -63,9 +63,6 @@ function MeetupItem(props) {
       }
     });
   }
-  function updateItem() {
-    console.log(props);
-  }
   function favPage() {
     return window.location.href.includes("fav");
   }
@@ -104,7 +101,6 @@ function MeetupItem(props) {
               color="primary"
               variant="contained"
               component={Link}
-              onClick={updateItem}
               to={"/edit/" + props.id}
             >
               Update

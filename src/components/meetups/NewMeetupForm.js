@@ -24,8 +24,7 @@ function NewMeetupForm(props) {
   const MeetupCtx = useContext(MeetupContext);
   useEffect(() => {
     if (id) {
-      let x;
-      let currentMeetup;
+      let x, currentMeetup;
       for (x in MeetupCtx.meetups) {
         if (x === id) {
           currentMeetup = MeetupCtx.meetups[x];
