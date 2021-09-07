@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
-
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
@@ -98,7 +97,7 @@ function MeetupItem(props) {
           {!favPage() && (
             <Button
               size="medium"
-              color="primary"
+              style={{ background: "#ffc400", color: "white" }}
               variant="contained"
               component={Link}
               to={"/edit/" + props.id}
@@ -119,7 +118,7 @@ function MeetupItem(props) {
             <Button
               variant="contained"
               size="medium"
-              color="primary"
+              color="secondary"
               onClick={deleteHandler}
             >
               Delete

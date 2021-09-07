@@ -11,7 +11,6 @@ import { useContext, useState } from "react";
 import FavoritesContext from "../../store/favorites-context";
 
 import { useAuth } from "../login/AuthContext";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -52,6 +51,14 @@ function MainNavigation() {
           style={{ marginRight: "1em" }}
           color="inherit"
           component={Link}
+          to={"/books"}
+        >
+          books
+        </Button>
+        <Button
+          style={{ marginRight: "1em" }}
+          color="inherit"
+          component={Link}
           to={"/"}
         >
           All Meeetups
@@ -74,7 +81,7 @@ function MainNavigation() {
           <Badge
             badgeContent={favoritesCtx.totalFavorites}
             color="secondary"
-            style={{ top: "-10px", left: "8px" }}
+            style={{ bottom: "10px", left: "8px" }}
           ></Badge>
         </Button>
         <Button onClick={handleLogout} color="inherit">

@@ -7,13 +7,16 @@ import App from "./App";
 
 import { FavoritesContextProvider } from "./store/favorites-context";
 import MeetupContextProvider from "./store/update-context";
+import BooksContextProvider from "./store/books-context";
 
 ReactDOM.render(
   <MeetupContextProvider>
     <FavoritesContextProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <BooksContextProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </BooksContextProvider>
     </FavoritesContextProvider>
   </MeetupContextProvider>,
   document.getElementById("root")

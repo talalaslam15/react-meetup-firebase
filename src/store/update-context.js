@@ -2,7 +2,7 @@ import { createContext, useState } from "react";
 
 export const MeetupContext = createContext({
   meetups: [],
-  updateMeetups: () => null,
+  updateMeetups: () => {},
 });
 
 function MeetupContextProvider(props) {
