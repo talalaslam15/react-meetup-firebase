@@ -4,6 +4,8 @@ import Card from "../components/ui/Card";
 import Box from "@material-ui/core/Box";
 import { BooksContext } from "../store/books-context";
 import { useContext, useEffect, useState } from "react";
+import { Slide } from "react-slideshow-image";
+import "react-slideshow-image/dist/styles.css";
 
 function Books() {
   const [books, setBooks] = useState([]);
@@ -73,6 +75,30 @@ function Books() {
       <div>
         {books.map((book) => (
           <Card key={book.id}>
+            <div style={{ margin: "1em" }}>
+              <Slide easing="ease">
+                {book.bookCovers.map(
+                  (url, i) =>
+                    url && (
+                      <div
+                        key={i}
+                        style={{ display: "block", textAlign: "center" }}
+                      >
+                        <img
+                          src={url || ""}
+                          style={{
+                            height: "200px",
+                            objectFit: "cover",
+                            pointerEvents: "none",
+                            userSelect: "none",
+                          }}
+                          alt={url}
+                        />
+                      </div>
+                    )
+                )}
+              </Slide>
+            </div>
             <h3>Book Title: {book.bookTitle}</h3>
             <h5>Book Price: {"$" + book.bookPrice}</h5>
             <Box m={1} textAlign={"end"}>
@@ -100,27 +126,6 @@ function Books() {
       </div>
     </div>
   );
-  /*{
-    return (
-       <Button
-        style={{ marginRight: "1em" }}
-        color="primary"
-        component={Link}
-        variant="contained"
-        to={"/bookscart"}
-      >
-        Cart
-      </Button>
-  }
-  {
-    /* <Badge
-        badgeContent={booksContext.cartItemsCount}
-        color="secondary"
-        style={{ top: "-20px", left: "-10px" }}
-      ></Badge> 
-    </div>
-  );
-  }*/
 }
 
 export default Books;

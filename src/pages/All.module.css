@@ -24,3 +24,23 @@
 .icon {
   margin: 0 0.1em 0 0.3em;
 }
+/* .camera {
+  font-size: 1.5em;
+  cursor: pointer;
+  position: absolute;
+  left: 95px;
+  pointer-events: initial;
+} */
+/* .loading {
+  animation: loading 2s linear infinite;
+  font-size: 2em;
+}
+
+@keyframes loading {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} */

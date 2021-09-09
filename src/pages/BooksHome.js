@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import { BooksContext } from "../store/books-context";
 import { Badge } from "@material-ui/core";
+import { Slide } from "react-slideshow-image";
+import "react-slideshow-image/dist/styles.css";
 
 function BooksHome() {
   const [books, setBooks] = useState([]);
@@ -22,6 +24,7 @@ function BooksHome() {
         id: book.id,
         title: book.bookTitle,
         price: book.bookPrice,
+        cover: book.bookCovers,
       });
     }
   }
@@ -32,7 +35,6 @@ function BooksHome() {
         return response.json();
       })
       .then((data) => {
-        booksContext.updateBooks(data);
         let books = [];
         for (let key in data) {
           const book = {
@@ -81,6 +83,30 @@ function BooksHome() {
       </nav>
       {books.map((book) => (
         <Card key={book.id}>
+          <div style={{ margin: "1em" }}>
+            <Slide easing="ease">
+              {book.bookCovers.map(
+                (url, i) =>
+                  url && (
+                    <div
+                      key={i}
+                      style={{ display: "block", textAlign: "center" }}
+                    >
+                      <img
+                        src={url || ""}
+                        style={{
+                          height: "200px",
+                          objectFit: "cover",
+                          pointerEvents: "none",
+                          userSelect: "none",
+                        }}
+                        alt={url}
+                      />
+                    </div>
+                  )
+              )}
+            </Slide>
+          </div>
           <h3>Book Title: {book.bookTitle}</h3>
           <h5>Book Price: {"$" + book.bookPrice}</h5>
           <Box m={1} textAlign={"end"}>

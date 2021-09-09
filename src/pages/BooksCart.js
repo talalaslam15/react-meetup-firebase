@@ -4,6 +4,8 @@ import Card from "../components/ui/Card";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import { Link } from "react-router-dom";
+import { Slide } from "react-slideshow-image";
+import "react-slideshow-image/dist/styles.css";
 
 function BooksCart() {
   const booksContext = useContext(BooksContext);
@@ -40,6 +42,30 @@ function BooksCart() {
       <div>
         {books.map((book) => (
           <Card key={book.id}>
+            <div>
+              <Slide easing="ease">
+                {book.cover.map(
+                  (url, i) =>
+                    url && (
+                      <div
+                        key={i}
+                        style={{ display: "block", textAlign: "center" }}
+                      >
+                        <img
+                          src={url || ""}
+                          style={{
+                            height: "200px",
+                            objectFit: "cover",
+                            pointerEvents: "none",
+                            userSelect: "none",
+                          }}
+                          alt={url}
+                        />
+                      </div>
+                    )
+                )}
+              </Slide>
+            </div>
             <h3>Book Title: {book.title}</h3>
             <h5>Book Price: {"$" + book.price}</h5>
             <Box m={1} textAlign={"center"}>
