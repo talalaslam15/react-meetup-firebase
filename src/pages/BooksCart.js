@@ -3,6 +3,7 @@ import { BooksContext } from "../store/books-context";
 import Card from "../components/ui/Card";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
+import Rating from "@material-ui/lab/Rating";
 import { Link } from "react-router-dom";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
@@ -35,7 +36,7 @@ function BooksCart() {
         id: key,
         ...booksContext.cart[key],
       };
-      total = total + parseInt(book.price);
+      total = total + parseInt(book.bookPrice);
       books.push(book);
     }
     content = (
@@ -44,7 +45,7 @@ function BooksCart() {
           <Card key={book.id}>
             <div>
               <Slide easing="ease">
-                {book.cover.map(
+                {book.bookCovers.map(
                   (url, i) =>
                     url && (
                       <div
@@ -66,8 +67,10 @@ function BooksCart() {
                 )}
               </Slide>
             </div>
-            <h3>Book Title: {book.title}</h3>
-            <h5>Book Price: {"$" + book.price}</h5>
+            <h3>Book Title: {book.bookTitle}</h3>
+            <h5>Book Price: {"$" + book.bookPrice}</h5>
+
+            <Rating name="read-only" value={book.bookRating} readOnly />
             <Box m={1} textAlign={"center"}>
               <Button
                 style={{ margin: "8px" }}

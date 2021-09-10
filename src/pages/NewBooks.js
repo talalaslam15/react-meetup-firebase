@@ -13,6 +13,7 @@ import LinearProgressWithLabel from "../components/ui/progress";
 function NewBooks() {
   const bookTitleRef = useRef();
   const bookPriceRef = useRef();
+  const bookRatingRef = useRef();
   const bookCoverRef = useRef();
   const history = useHistory();
   const { id } = useParams();
@@ -32,6 +33,7 @@ function NewBooks() {
           currentBook = booksContext.books[x];
           localStorage.title = currentBook.bookTitle;
           localStorage.price = currentBook.bookPrice;
+          localStorage.rating = currentBook.bookRating;
           // seturls(currentBook.bookCovers);
           localStorage.cover = JSON.stringify(currentBook.bookCovers);
           break;
@@ -39,6 +41,7 @@ function NewBooks() {
       }
       bookTitleRef.current.value = localStorage.title;
       bookPriceRef.current.value = localStorage.price;
+      bookRatingRef.current.value = localStorage.rating;
       seturls(JSON.parse(localStorage.cover));
     }
   }, [id, booksContext.books]);
@@ -85,7 +88,8 @@ function NewBooks() {
     e.preventDefault();
     const bookData = {
       bookTitle: bookTitleRef.current.value,
-      bookPrice: bookPriceRef.current.value,
+      bookPrice: parseInt(bookPriceRef.current.value),
+      bookRating: parseInt(bookRatingRef.current.value),
       bookCovers: urls,
     };
     if (id) {
@@ -101,6 +105,9 @@ function NewBooks() {
           },
         }
       ).then(() => {
+        // booksContext.updateBooks(bookData);
+        if (booksContext.itemIsInCart(id))
+          booksContext.updateCart({ id, ...bookData });
         history.replace("/admin/books");
       });
     } else {
@@ -154,7 +161,24 @@ function NewBooks() {
           </div>
           <div>
             <label htmlFor="bookprice">Book Price: </label>
-            <input type="text" id="bookprice" ref={bookPriceRef} required />
+            <input
+              type="number"
+              id="bookprice"
+              ref={bookPriceRef}
+              min={1}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="bookrating">Book Rating: </label>
+            <input
+              type="number"
+              id="bookrating"
+              ref={bookRatingRef}
+              required
+              min={1}
+              max={5}
+            />
           </div>
           <div
             style={{

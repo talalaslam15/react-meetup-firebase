@@ -5,6 +5,8 @@ import Box from "@material-ui/core/Box";
 import { BooksContext } from "../store/books-context";
 import { useContext, useEffect, useState } from "react";
 import { Slide } from "react-slideshow-image";
+import Rating from "@material-ui/lab/Rating";
+
 import "react-slideshow-image/dist/styles.css";
 
 function Books() {
@@ -21,6 +23,7 @@ function Books() {
         method: "DELETE",
       }
     ).then(() => {
+      booksContext.removeFromCart(book.id);
       loadBooks();
     });
   }
@@ -101,6 +104,8 @@ function Books() {
             </div>
             <h3>Book Title: {book.bookTitle}</h3>
             <h5>Book Price: {"$" + book.bookPrice}</h5>
+
+            <Rating name="read-only" value={book.bookRating} readOnly />
             <Box m={1} textAlign={"end"}>
               <Button
                 style={{ margin: "8px" }}

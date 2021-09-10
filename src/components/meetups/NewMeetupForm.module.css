@@ -1,7 +1,9 @@
 .form {
   padding: 1rem;
 }
-
+input:-webkit-autofill {
+  background-clip: text;
+}
 .control {
   margin-bottom: 0.5rem;
 }

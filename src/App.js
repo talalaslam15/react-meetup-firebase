@@ -23,10 +23,12 @@ function App() {
         <PrivateRoute path="/admin/books" component={Books} />
         <PrivateRoute path="/admin/newbook" component={NewBooks} />
         <PrivateRoute path="/admin/editbook/:id" component={NewBooks} />
+
         <Route path="/books">
-          <Layout>
-            <BooksHome />
-          </Layout>
+          {/* <Layout> */}
+          <BooksHome />
+
+          {/* </Layout> */}
         </Route>
         <Route path="/bookscart">
           <Layout>

@@ -6,6 +6,7 @@ export const BooksContext = createContext({
   cart: [],
   cartItemsCount: 0,
   addToCart: (book) => {},
+  updateCart: (bookData) => {},
   removeFromCart: (bookId) => {},
   itemIsInCart: (bookId) => {},
 });
@@ -24,6 +25,15 @@ function BooksContextProvider(props) {
     });
   }
 
+  function updateCartHandler(bookData) {
+    let index = 0;
+    for (let book in cartItems) {
+      if (cartItems[book].id === bookData.id) break;
+      else index++;
+    }
+    cartItems.splice(index, 1, bookData);
+  }
+
   function removeFromCartHandler(bookId) {
     setCartItems((previousCartItems) => {
       return previousCartItems.filter((book) => book.id !== bookId);
@@ -39,6 +49,7 @@ function BooksContextProvider(props) {
     cart: cartItems,
     cartItemsCount: cartItems.length,
     addToCart: addToCartHandler,
+    updateCart: updateCartHandler,
     removeFromCart: removeFromCartHandler,
     itemIsInCart: itemIsInCartHandler,
   };

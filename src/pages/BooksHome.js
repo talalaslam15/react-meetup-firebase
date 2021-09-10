@@ -7,6 +7,8 @@ import { BooksContext } from "../store/books-context";
 import { Badge } from "@material-ui/core";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
+import Grid from "@material-ui/core/Grid";
+import { Rating } from "@material-ui/lab";
 
 function BooksHome() {
   const [books, setBooks] = useState([]);
@@ -22,9 +24,10 @@ function BooksHome() {
     } else {
       booksContext.addToCart({
         id: book.id,
-        title: book.bookTitle,
-        price: book.bookPrice,
-        cover: book.bookCovers,
+        bookTitle: book.bookTitle,
+        bookPrice: book.bookPrice,
+        bookRating: book.bookRating,
+        bookCovers: book.bookCovers,
       });
     }
   }
@@ -81,48 +84,61 @@ function BooksHome() {
           Admin
         </Button>
       </nav>
-      {books.map((book) => (
-        <Card key={book.id}>
-          <div style={{ margin: "1em" }}>
-            <Slide easing="ease">
-              {book.bookCovers.map(
-                (url, i) =>
-                  url && (
-                    <div
-                      key={i}
-                      style={{ display: "block", textAlign: "center" }}
-                    >
-                      <img
-                        src={url || ""}
-                        style={{
-                          height: "200px",
-                          objectFit: "cover",
-                          pointerEvents: "none",
-                          userSelect: "none",
-                        }}
-                        alt={url}
-                      />
-                    </div>
-                  )
-              )}
-            </Slide>
-          </div>
-          <h3>Book Title: {book.bookTitle}</h3>
-          <h5>Book Price: {"$" + book.bookPrice}</h5>
-          <Box m={1} textAlign={"end"}>
-            <Button
-              style={{ margin: "8px" }}
-              color="primary"
-              // variant="contained"
-              onClick={() => {
-                toggleCartStatusHandler(book);
-              }}
-            >
-              {itemIsInCart(book) ? "Remove from Cart" : "Add to Cart"}
-            </Button>
-          </Box>
-        </Card>
-      ))}
+      <Grid
+        style={{ padding: "3em", width: "100%" }}
+        container
+        spacing={3}
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+      >
+        {books.map((book) => (
+          <Grid key={book.id} item xs={12} sm={6} lg={4}>
+            <Card>
+              <div style={{ margin: "1em" }}>
+                <Slide easing="ease">
+                  {book.bookCovers.map(
+                    (url, i) =>
+                      url && (
+                        <div
+                          key={i}
+                          style={{ display: "block", textAlign: "center" }}
+                        >
+                          <img
+                            src={url || ""}
+                            style={{
+                              height: "200px",
+                              objectFit: "cover",
+                              pointerEvents: "none",
+                              userSelect: "none",
+                            }}
+                            alt={url}
+                          />
+                        </div>
+                      )
+                  )}
+                </Slide>
+              </div>
+              <h3>Book Title: {book.bookTitle}</h3>
+              <h5>Book Price: {"$" + book.bookPrice}</h5>
+              <Rating name="read-only" value={book.bookRating} readOnly />
+
+              <Box m={1} textAlign={"end"}>
+                <Button
+                  style={{ margin: "8px" }}
+                  color="primary"
+                  // variant="contained"
+                  onClick={() => {
+                    toggleCartStatusHandler(book);
+                  }}
+                >
+                  {itemIsInCart(book) ? "Remove from Cart" : "Add to Cart"}
+                </Button>
+              </Box>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
     </div>
   );
 }

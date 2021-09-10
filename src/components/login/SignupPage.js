@@ -67,7 +67,7 @@ export default function SignupPage() {
             className={classes.root}
             onSubmit={formik.handleSubmit}
             noValidate
-            autoComplete="off"
+            // autoComplete="off"
           >
             <h1>Sign Up</h1>
             <Box mb={"16px"}>
