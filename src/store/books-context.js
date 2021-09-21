@@ -26,12 +26,14 @@ function BooksContextProvider(props) {
   }
 
   function updateCartHandler(bookData) {
-    let index = 0;
-    for (let book in cartItems) {
-      if (cartItems[book].id === bookData.id) break;
-      else index++;
-    }
+    let index = cartItems.findIndex((book) => book.id === bookData.id);
     cartItems.splice(index, 1, bookData);
+    // let index = 0;
+    // for (let book in cartItems) {
+    //   if (cartItems[book].id === bookData.id) break;
+    //   else index++;
+    // }
+    // cartItems.splice(index, 1, bookData);
   }
 
   function removeFromCartHandler(bookId) {
